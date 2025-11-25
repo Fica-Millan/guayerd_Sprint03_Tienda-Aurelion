@@ -107,123 +107,128 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
 
 ### Información
 
-1. **Nombre del programa:** Proyecto Tienda Aurelion
+🔸 **Nombre del programa:** Proyecto Tienda Aurelion
 
-2. **Objetivo:**
-   Permitir la exploración interactiva de los datos de ventas, clientes y productos de la tienda, proporcionados en los siguientes dataset:
-   - `clientes.xlsx`
-   - `productos.xlsx`
-   - `ventas.xlsx` 
-   - `detalle_ventas.xlsx`
+🔸 **Objetivo:**
+  Permitir la exploración interactiva de los datos de ventas, clientes y productos de la tienda, proporcionados en los siguientes dataset:
+  - `clientes.xlsx`
+  - `productos.xlsx`
+  - `ventas.xlsx` 
+  - `detalle_ventas.xlsx`
    
-   Estos archivos fueron unificados en un único dataset integrado denominado `df_tienda_aurelion.csv`, que concentra toda la información relevante para su análisis. 
+  Estos archivos fueron unificados en un único dataset integrado denominado `df_tienda_aurelion.csv`, que concentra toda la información relevante para su análisis. 
    
-   Además, la aplicación muestra la documentación, el pseudocódigo y los diagramas de flujo del proyecto.
+  Además, la aplicación muestra la documentación, el pseudocódigo y los diagramas de flujo del proyecto.
 
-3. **Lenguaje y librerías utilizadas**
-    - `Python 3.9`
-    - Librerías principales:
-      - `streamlit` (interfaz web)
-      - `pandas` (manipulación de datos)
-      - `Pillow` / `PIL` (manipulación de imágenes)
-      - `numpy` (cálculo numérico)
-      - `matplotlib`, `seaborn` (visualización)
-      - `ydata-profiling` (EDA automatizado)
-      - `streamlit-pandas-profiling` (integración de perfiles en Streamlit)
-    - Librerías para Machine Learning:
-      - `pycaret` (AutoML / benchmarking)
-      - `scikit-learn` (`sklearn`: preprocesamiento, modelos y métricas)
-      - `joblib` / `pickle` (serialización de modelos)
-    - Utilidades y sistema de archivos:
-      - `os`, `pathlib` (gestión de rutas y archivos)
-      - `pickle` (serialización en memoria/file)
-    - Observación: Algunas dependencias se usan indirectamente (p. ej. `openpyxl` como motor de `pandas.read_excel`).
+🔸 **Lenguaje y librerías utilizadas**
 
-4. **Entrada de datos**
-    - Archivos Excel: `clientes.xlsx`, `productos.xlsx`, `ventas.xlsx`, `detalle_ventas.xlsx`
-    - Archivo de documentación: `documentacion_tienda_aurelion.md`
+  - `Python 3.9`
+  - Librerías principales:
+    - `streamlit` (interfaz web)
+    - `pandas` (manipulación de datos)
+    - `Pillow` / `PIL` (manipulación de imágenes)
+    - `numpy` (cálculo numérico)
+    - `matplotlib`, `seaborn` (visualización)
+    - `ydata-profiling` (EDA automatizado)
+    - `streamlit-pandas-profiling` (integración de perfiles en Streamlit)
+  - Librerías para Machine Learning:
+    - `pycaret` (AutoML / benchmarking)
+    - `scikit-learn` (`sklearn`: preprocesamiento, modelos y métricas)
+    - `joblib` / `pickle` (serialización de modelos)
+  - Utilidades y sistema de archivos:
+    - `os`, `pathlib` (gestión de rutas y archivos)
+    - `pickle` (serialización en memoria/file)
+  - Observación: Algunas dependencias se usan indirectamente (p. ej. `openpyxl` como motor de `pandas.read_excel`).
 
-5. **Salida / Visualización**
-    - Interfaz web interactiva con menú lateral
-    - Expanders utilizados en la sección Ver documentación para mostrar de forma organizada el contenido técnico (contexto, datasets, metodología, pseudocódigo y diagrama de flujo).
-    - Tablas de datos y resúmenes estadísticos
+🔸 **Entrada de datos**
+  - Archivos Excel: `clientes.xlsx`, `productos.xlsx`, `ventas.xlsx`, `detalle_ventas.xlsx`
+  - Archivo de documentación: `documentacion_tienda_aurelion.md`
 
-6. **Funcionalidades principales**
-    - **Información General**: Vista previa de cada dataset, tipos de datos, metadatos y estadísticas básicas.
-    - **Estadísticas Descriptivas**: Análisis detallado mediante `pandas.describe(include="all")` con visualizaciones personalizadas:
-      - Distribución de variables numéricas y categóricas
-      - Matrices de correlación
-      - Gráficos específicos por dataset (series temporales, distribuciones, etc.)
-    - **EDA Automatizado**: Análisis exploratorio completo utilizando `ydata-profiling`:
-      - Perfilado automático de variables
-      - Detección de correlaciones y patrones
-      - Análisis de valores faltantes y cardinalidad
-    - **EDA Diagnóstico**: Análisis en profundidad del dataset unificado:
-      - Limpieza y preparación de datos
-      - Detección y análisis de outliers
-      - Visualizaciones avanzadas de series temporales
-      - Identificación de productos top y patrones de venta
-    - **Preprocesamiento ML**: Herramientas interactivas para preparar datos antes del modelado:
-      - Selección de objetivo (`target`) y variables predictoras
-      - Imputación de valores faltantes (media/mediana/moda)
-      - Codificación de variables categóricas (`one-hot`, `ordinal`)
-      - Escalado de variables numéricas (`StandardScaler`, `MinMaxScaler`)
-      - Selección/filtrado de features y exportación del dataset preprocesado a CSV
-    - **ML Automatizado (AutoML)**: Benchmarking y selección automática de modelos (PyCaret):
-      - Inicialización del experimento (`setup`) con normalización y control de multicolinealidad
-      - Comparación automática de modelos (`compare_models`) y visualización de métricas
-      - Exportación y descarga del mejor modelo encontrado
-    - **Entrenamiento Manual (Random Forest)**: Entrenamiento y evaluación controlada:
-      - Ajuste interactivo de hiperparámetros (n_estimators, max_depth, class_weight, etc.)
-      - Validación cruzada, métricas de test, curvas ROC y matriz de confusión
-      - Interpretación mediante `feature_importances_` y curvas de aprendizaje
-      - Guardado y descarga del modelo (`joblib`/`pickle`)
-    - **Documentación Interactiva**: Acceso organizado a la documentación técnica del proyecto
-    - **Exportación de artefactos**: Guardado automático de figuras en `assets/plots` y modelos en `models/`
+🔸 **Salida / Visualización**
+  - Interfaz web interactiva con menú lateral
+  - Expanders utilizados en la sección Ver documentación para mostrar de forma organizada el contenido técnico (contexto, datasets, metodología, pseudocódigo y diagrama de flujo).
+  - Tablas de datos y resúmenes estadísticos
 
-7. **Estructura del programa**
-    - **Carga y Unificación**: 
-      - Función `load_dataset()` con caché de Streamlit
-      - Generación automática del dataset unificado mediante `load_and_merge_datasets()`
-    - **Menú Principal**: Radio buttons en la barra lateral con las opciones:
-      - Información General
-      - Estadísticas
-      - EDA Automatizado
-      - EDA Diagnóstico
-      - Preprocesamiento ML
-      - ML Automatizado
-      - Entrenamiento Random Forest
-      - Ver Documentación
-    - **Módulos Organizados**:
-      - Cargadores de datos (`data_loader.py`)
-      - Páginas separadas por funcionalidad (`pages/`)
-      - Utilidades de visualización (`utils/`)
+🔸 **Funcionalidades principales**
+  - **Información General**: Vista previa de cada dataset, tipos de datos, metadatos y estadísticas básicas.
+  - **Estadísticas Descriptivas**: Análisis detallado mediante `pandas.describe(include="all")` con visualizaciones personalizadas:
+    - Distribución de variables numéricas y categóricas
+    - Matrices de correlación
+    - Gráficos específicos por dataset (series temporales, distribuciones, etc.)
+  - **EDA Automatizado**: Análisis exploratorio completo utilizando `ydata-profiling`:
+    - Perfilado automático de variables
+    - Detección de correlaciones y patrones
+    - Análisis de valores faltantes y cardinalidad
+  - **EDA Diagnóstico**: Análisis en profundidad del dataset unificado:
+    - Limpieza y preparación de datos
+    - Detección y análisis de outliers
+    - Visualizaciones avanzadas de series temporales
+    - Identificación de productos top y patrones de venta
+  - **Preprocesamiento ML**: Herramientas interactivas para preparar datos antes del modelado:
+    - Selección de objetivo (`target`) y variables predictoras
+    - Imputación de valores faltantes (media/mediana/moda)
+    - Codificación de variables categóricas (`one-hot`, `ordinal`)
+    - Escalado de variables numéricas (`StandardScaler`, `MinMaxScaler`)
+    - Selección/filtrado de features y exportación del dataset preprocesado a CSV
+  - **ML Automatizado (AutoML)**: Benchmarking y selección automática de modelos (PyCaret):
+    - Inicialización del experimento (`setup`) con normalización y control de multicolinealidad
+    - Comparación automática de modelos (`compare_models`) y visualización de métricas
+    - Exportación y descarga del mejor modelo encontrado
+  - **Entrenamiento Manual (Random Forest)**: Entrenamiento y evaluación controlada:
+    - Ajuste interactivo de hiperparámetros (n_estimators, max_depth, class_weight, etc.)
+    - Validación cruzada, métricas de test, curvas ROC y matriz de confusión
+    - Interpretación mediante `feature_importances_` y curvas de aprendizaje
+    - Guardado y descarga del modelo (`joblib`/`pickle`)
+  - **Documentación Interactiva**: Acceso organizado a la documentación técnica del proyecto
+  - **Exportación de artefactos**: Guardado automático de figuras en `assets/plots` y modelos en `models/`
+
+🔸 **Estructura del programa**
+  - **Carga y Unificación**: 
+    - Función `load_dataset()` con caché de Streamlit
+    - Generación automática del dataset unificado mediante `load_and_merge_datasets()`
+  - **Menú Principal**: Radio buttons en la barra lateral con las opciones:
+    - Información General
+    - Estadísticas
+    - EDA Automatizado
+    - EDA Diagnóstico
+    - Preprocesamiento ML
+    - ML Automatizado
+    - Entrenamiento Random Forest
+    - Ver Documentación
+  - **Módulos Organizados**:
+    - Cargadores de datos (`data_loader.py`)
+    - Páginas separadas por funcionalidad (`pages/`)
+    - Utilidades de visualización (`utils/`)
 
 ---
 
 ### Pasos
 
-1. **Inicio de la aplicación**
-  - Se inicializa Streamlit y se configura la página (título, ícono y diseño).
-  - Se muestra el logotipo de la tienda junto al encabezado principal de la interfaz.
+<h5>1️⃣ <b>Inicio de la aplicación</b></h5>
 
-2. **Carga de datasets**
-  - Se leen los archivos Excel: `clientes.xlsx`, `productos.xlsx`, `ventas.xlsx` y `detalle_ventas.xlsx` mediante **pandas**.
-  - Cada archivo se carga en un **DataFrame** independiente.
-  - La función de carga se **almacena en caché** (`st.cache_data`) para optimizar el rendimiento y evitar recargas innecesarias.
+- Se inicializa Streamlit y se configura la página (título, ícono y diseño).
+- Se muestra el logotipo de la tienda junto al encabezado principal de la interfaz.
 
-2. **Menú principal**
-  - Se implementa mediante radio buttons en la barra lateral, ofreciendo secciones principales:
-     - **Información General**: Exploración básica de datasets
-     - **Estadísticas**: Análisis descriptivo y visualizaciones
-     - **EDA Automatizado**: Perfilado completo de datos
-     - **EDA Diagnóstico**: Análisis detallado y visualizaciones
-    - **Preprocesamiento ML**: Limpieza, transformación y preparación del dataset para entrenamiento.
-    - **AutoML (Benchmark)**: Comparación automática de múltiples modelos y selección del mejor rendimiento.
-    - **Entrenamiento Manual (Random Forest)**: Configuración, entrenamiento y evaluación detallada del modelo Random Forest.
-    - **Ver Documentación**: Acceso a documentación técnica
+<h5>2️⃣ <b>Carga de datasets</b></h5>
 
-3. **Opción: Información General**
+- Se leen los archivos Excel: `clientes.xlsx`, `productos.xlsx`, `ventas.xlsx` y `detalle_ventas.xlsx` mediante **pandas**.
+- Cada archivo se carga en un **DataFrame** independiente.
+- La función de carga se **almacena en caché** (`st.cache_data`) para optimizar el rendimiento y evitar recargas innecesarias.
+
+<h5>3️⃣ <b>Menú principal</b></h5>
+
+- Se implementa mediante radio buttons en la barra lateral, ofreciendo secciones principales:
+  - **Información General**: Exploración básica de datasets
+  - **Estadísticas**: Análisis descriptivo y visualizaciones
+  - **EDA Automatizado**: Perfilado completo de datos
+  - **EDA Diagnóstico**: Análisis detallado y visualizaciones
+  - **Preprocesamiento ML**: Limpieza, transformación y preparación del dataset para entrenamiento.
+  - **AutoML (Benchmark)**: Comparación automática de múltiples modelos y selección del mejor rendimiento.
+  - **Entrenamiento Manual (Random Forest)**: Configuración, entrenamiento y evaluación detallada del modelo Random Forest.
+  - **Ver Documentación**: Acceso a documentación técnica
+
+<h5>4️⃣ <b>Opción: Información General</b></h5>
+
   - Interfaz de selección de dataset mediante selectbox
   - Para cada archivo seleccionado muestra:
     - Metadatos: fecha de modificación y tamaño
@@ -232,7 +237,8 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
     - Resumen: dimensiones y cantidad de registros
   - Información organizada en expanders para mejor navegación
 
-4. **Opción 2: Estadísticas**  
+<h5>5️⃣ <b>Opción 2: Estadísticas</b></h5>
+
    - Selección interactiva del dataset a analizar
    - Análisis estadístico completo que incluye:
      - Estadísticas descriptivas via `describe(include="all")`
@@ -242,7 +248,8 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
        • Variables categóricas: gráficos de barras y pie
        • Series temporales: evolución y tendencias
 
-5. **Opción 3: EDA Automatizado**
+<h5>6️⃣ <b>Opción 3: EDA Automatizado</b></h5>
+
    - Generación automática del dataset unificado si no existe
    - Creación de un reporte interactivo completo usando `ydata-profiling`
    - Visualización integrada mediante `streamlit-pandas-profiling`
@@ -252,7 +259,8 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
      • Valores faltantes y duplicados
      • Alertas y recomendaciones
 
-6. **Opción 4: EDA Diagnóstico**
+<h5>7️⃣ <b>Opción 4: EDA Diagnóstico</b></h5>
+
    - Análisis profundo del dataset unificado
    - Proceso de limpieza y preparación de datos
    - Generación de visualizaciones avanzadas:
@@ -262,7 +270,8 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
      • Rankings y patrones de venta
    - Guardado automático de gráficos en `assets/plots`
 
-7. **Opción: Preprocesamiento ML**
+<h5>8️⃣ <b>Opción: Preprocesamiento ML</b></h5>
+
   - Permitir seleccionar objetivo (`target`) y variables predictoras.
   - Opciones interactivas de preprocesamiento:
     - Manejo de nulos: imputación por media/mediana/moda.
@@ -272,14 +281,16 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
   - Configurar `train/test split` y semilla (seed).
   - Mostrar resumen del dataset preprocesado y permitir exportarlo como CSV.
 
-8. **Opción: AutoML (Benchmark)**
+<h5>9️⃣ <b>Opción: AutoML (Benchmark)</b></h5>
+
   - Cargar dataset preprocesado.
   - Inicializar experimento con PyCaret: `setup()` indicando `target`, `normalize`, `session_id`, etc.
   - Ejecutar `compare_models()` para obtener ranking por la métrica escogida (AUC/Accuracy/RMSE según caso).
   - Mostrar top-N modelos, métricas y gráficos comparativos.
   - Permitir guardar el mejor modelo y exportar su configuración.
 
-9. **Opción: Entrenamiento Manual (Random Forest)**
+<h5>1️⃣0️⃣ <b>Opción: Entrenamiento Manual (Random Forest)</b></h5>
+
   - Cargar dataset preprocesado.
   - Permitir ajuste interactivo de hiperparámetros (p. ej. `n_estimators`, `max_depth`, `class_weight`).
   - Entrenar modelo (clasificador o regresor según el objetivo).
@@ -287,7 +298,8 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
   - Mostrar importancia de variables (`feature_importances_`) y curvas de aprendizaje.
   - Guardar modelo entrenado (`joblib`/`pickle`) y ofrecer descarga.
 
-10. **Opción: Ver Documentación**  
+<h5>1️⃣1️⃣ <b>Opción: Ver Documentación</b></h5>
+
    - Lectura y procesamiento de `documentacion_tienda_aurelion.md`
    - Contenido organizado en expanders por secciones:
      • Contexto y objetivo
@@ -296,7 +308,8 @@ Cada dataset es estructurado; se organiza en filas que representan registros ind
      • Diagrama de flujo
    - Visualización adaptativa del flujograma
 
-11. **Interactividad**  
+<h5>1️⃣2️⃣ <b>Interactividad</b></h5>
+
    - Los **expanders** permiten ocultar o desplegar secciones para una interfaz más limpia.  
    - Los **selectboxes** ofrecen navegación dinámica entre datasets y apartados.  
    - La aplicación combina usabilidad y claridad visual para una exploración fluida de los datos.
@@ -663,13 +676,13 @@ Los modelos fueron ordenados por AUC (métrica seleccionada en `compare_models`)
 
 ### Entrenamiento Manual: Random Forest
 
-1️⃣ **Objetivo**
+<h5>1️⃣ <b>Objetivo</b></h5>
     
 Implementar manualmente un modelo Random Forest Classifier para predecir el nivel de demanda de productos, evaluando su desempeño mediante validación cruzada, métricas de test, curva ROC multiclase, matriz de confusión, curva de aprendizaje e importancia de variables.
 
 Este enfoque permite obtener un modelo transparente, reproducible y completamente controlado por el analista, ideal para evaluar real capacidad de generalización.
 
-2️⃣ **Configuración del modelo**
+<h5>2️⃣ <b>Configuración del modelo</b></h5>
 
 El modelo fue configurado manualmente en la aplicación Streamlit con los siguientes parámetros:
 
@@ -694,7 +707,7 @@ El modelo fue configurado manualmente en la aplicación Streamlit con los siguie
 - **Validación cruzada**: 5 folds (definido dinámicamente según el tamaño del dataset)
 - **Dataset usado**: 95 productos procesados
 
-3️⃣ **Métricas de evaluación**
+<h5>3️⃣ <b>Métricas de evaluación</b></h5>
 
   🔸 **Validación Cruzada (5 folds)**
   
@@ -718,14 +731,14 @@ El modelo fue configurado manualmente en la aplicación Streamlit con los siguie
   
   🔸 **Curva ROC Multiclase (One-vs-Rest)**
   
+  - **AUC Macro**: 0.8433
   - **Clase 0 (Baja demanda)**: AUC = 0.92
   - **Clase 1 (Media demanda)**: AUC = 0.75  
-  - **Clase 2 (Alta demanda)**: AUC = 0.86
-  - **AUC Macro**: 0.8433
+  - **Clase 2 (Alta demanda)**: AUC = 0.86 
 
   La clase “Media” es la más difícil de separar, algo esperable por su posición   intermedia entre “Baja” y “Alta”.
 
-4️⃣ **Análisis de resultados**
+<h5>4️⃣ <b>Análisis de resultados</b></h5>
 
   🔸 **Matriz de Confusión**
   
@@ -748,7 +761,7 @@ El modelo fue configurado manualmente en la aplicación Streamlit con los siguie
 
   Los resultados destacan la importancia del volumen de operaciones y precio promedio, variables clave para entender la demanda.
 
-5️⃣ **Classification Report por clase**
+<h5><b>Classification Report por clase</b></h5>
 
   | Clase | Precision | Recall | F1-Score |
   |-------|-----------|--------|----------|
@@ -758,7 +771,7 @@ El modelo fue configurado manualmente en la aplicación Streamlit con los siguie
 
   La clase “Media” continúa siendo la más débil; se beneficiaría de más datos o técnicas de oversampling futuro.
 
-6️⃣ **Curva de aprendizaje**
+<h5><b>Curva de aprendizaje</b></h5>
 
 La curva de aprendizaje muestra:
 - Brecha moderada entre entrenamiento y validación
@@ -767,9 +780,9 @@ La curva de aprendizaje muestra:
 
 Conclusión: el modelo generaliza razonablemente bien, pero sería beneficioso entrenarlo con más datos.
 
-7️⃣ **Conclusiones generales**
+<h5>5️⃣ <b>Conclusiones generales</b></h5>
 
-  🔸 **Comparativa: AutoML vs Random Forest Manual**
+**Comparativa: AutoML vs Random Forest Manual**
   
   | Aspecto | AutoML (PyCaret) | RF Manual |
   |---------|------------------|-----------|
@@ -785,8 +798,7 @@ Conclusión: el modelo generaliza razonablemente bien, pero sería beneficioso e
 - El RF Manual, aunque menos preciso, es más interpretable y más honesto respecto a la generalización real.
 - En datasets pequeños como este, el modelo manual suele reflejar mejor el rendimiento esperado en producción.
 
-
-8️⃣ **Recomendaciones para producción**
+<h5>6️⃣ <b>Recomendaciones para producción</b></h5>
     
 1. **Modelo sugerido**: 
     - Random Forest Manual → Mayor generalización y transparencia.
@@ -806,7 +818,7 @@ Conclusión: el modelo generaliza razonablemente bien, pero sería beneficioso e
     - Probar embeddings o técnicas de reducción de dimensionalidad
     - Ajustar hiperparámetros adicionales
 
-9️⃣ **Impacto para el Negocio**
+<h5>7️⃣ <b>Impacto para el Negocio</b></h5>
 
 El modelo desarrollado permite:
 

@@ -21,7 +21,7 @@ from sklearn.metrics import (
     RocCurveDisplay
 )
 
-from src.utils.figures import mostrar_fig
+from src.utils.figures import mostrar_fig, save_fig_to_disk
 from src.utils.palette import PALETA
 
 
@@ -280,6 +280,8 @@ def show_random_forest_manual():
                 loc="lower right",
                 frameon=True
             )
+        
+        save_fig_to_disk(fig)
         mostrar_fig(fig)
 
         # Valor del AUC macro
@@ -317,6 +319,8 @@ def show_random_forest_manual():
         ax.set_title("Matriz de Confusión", fontsize=14, fontweight="bold", color=PALETA["secundario"])
         ax.set_xlabel("Predicción", fontsize=12, fontweight="bold")
         ax.set_ylabel("Real", fontsize=12, fontweight="bold")
+        
+        save_fig_to_disk(fig)
         mostrar_fig(fig, ancho=500)
 
         # ===============================================================
@@ -352,6 +356,8 @@ def show_random_forest_manual():
         )
         ax.set_xlabel("Importancia", fontsize=12,fontweight="bold")
         ax.set_ylabel("Variables", fontsize=12,fontweight="bold")
+        
+        save_fig_to_disk(fig)
         mostrar_fig(fig)
 
 
@@ -449,6 +455,7 @@ def show_random_forest_manual():
         
         plt.tight_layout()  # Ajustar márgenes automáticamente
         
+        save_fig_to_disk(fig)
         mostrar_fig(fig, ancho=500)
 
         # ===============================================================
@@ -517,6 +524,7 @@ def show_random_forest_manual():
         else:
             st.write(f"🔧 **PRECISIÓN A MEJORAR**: Accuracy final de {accuracy_final:.3f}")
             
+        save_fig_to_disk(fig)    
         mostrar_fig(fig)
 
 
