@@ -54,7 +54,7 @@ def mostrar_documentacion():
         # --- Interpretaciones EDA – Visualizaciones ---
         st.markdown("### Interpretaciones EDA – Visualizaciones")
 
-        # --- Distribución de variables ---
+        # Distribución de variables
         with st.expander("Gráfica: Distribuciones de Variables numéricas"):
             mostrar_graficos([
                 "assets/plots/Distribucion_de_cantidad.png",
@@ -67,7 +67,7 @@ def mostrar_documentacion():
                 fin_str="#### 🔸 Gráfica: correlacion"
             )
 
-        # --- Correlación ---
+        # Correlación
         with st.expander("Gráfica: Matriz de Correlación"):
             mostrar_graficos([
                 "assets/plots/Matriz_de_Correlacion.png",
@@ -78,7 +78,7 @@ def mostrar_documentacion():
                 fin_str="#### 🔸 Gráfica: ventas_total_por_mes"
             )
 
-        # --- Ventas por mes ---
+        # Ventas por mes
         with st.expander("Gráfica: Ventas Totales por mes"):
             mostrar_graficos([
                 "assets/plots/Ventas_totales_por_mes.png",
@@ -89,7 +89,7 @@ def mostrar_documentacion():
                 fin_str="#### 🔸 Gráfica: relacion_cantidad"
             )
 
-        # --- Relación cantidad ---
+        # Relación cantidad
         with st.expander("Gráfica: Relación Cantidad - Total Ventas"):
             mostrar_graficos([
                 "assets/plots/Relacion_Cantidad_-_Total_Venta.png",
@@ -100,7 +100,7 @@ def mostrar_documentacion():
                 fin_str="#### 🔸 Gráfica: outliers"
             )
 
-        # --- Outliers ---
+        # Outliers
         with st.expander("Gráfica: Outliers y Distribución"):
             mostrar_graficos([
                 "assets/plots/outliers_cantidad.png",
@@ -111,6 +111,28 @@ def mostrar_documentacion():
                 contenido_md,
                 inicio_str="#### 🔸 Gráfica: outliers"
             )                         
+                    
+                    
+        # --- Modelado de Machine Learning ---
+        st.markdown("### Modelado de Machine Learning")
+
+        # Preprocesamiento
+        with st.expander("Preprocesamiento"):
+            inicio = contenido_md.find("### Preprocesamiento para Machine Learning") 
+            fin = contenido_md.find("### AutoML: Benchmarking con PyCaret")
+            st.markdown(contenido_md[inicio:fin], unsafe_allow_html=True)
+
+        # AutoML
+        with st.expander("Auto Machine Learning"):
+            inicio = contenido_md.find("### AutoML: Benchmarking con PyCaret") 
+            fin = contenido_md.find("### Entrenamiento Manual: Random Forest")
+            st.markdown(contenido_md[inicio:fin], unsafe_allow_html=True)
+
+        # Random Forest Manual
+        with st.expander("Entrenamiento Manual"):
+            inicio = contenido_md.find("### Entrenamiento Manual: Random Forest") 
+            fin = contenido_md.find("\n### ", inicio)
+            st.markdown(contenido_md[inicio:fin], unsafe_allow_html=True)
                     
     else:
         st.warning("El archivo de documentación no se encontró.")

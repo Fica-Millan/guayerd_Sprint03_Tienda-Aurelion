@@ -6,8 +6,9 @@ import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import numpy as np
 
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score, learning_curve
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
     accuracy_score, 
@@ -86,15 +87,15 @@ def show_random_forest_manual():
 
     with col1:
         # Hiperparámetros principales
-        n_estimators = st.slider("Cantidad de árboles", 50, 300, 100)
-        max_depth = st.slider("Profundidad máxima", 2, 20, 10)
+        n_estimators = st.slider("Cantidad de árboles", 50, 300, 200)
+        max_depth = st.slider("Profundidad máxima", 2, 20, 15)
         
         # Balanceo automático basado en distribución del target
         balancear = st.checkbox("Balancear clases", value=True)
 
     with col2:
         # Proporción del conjunto de test
-        test_size = st.slider("Tamaño del Test (%)", 10, 40, 20) / 100
+        test_size = st.slider("Tamaño del Test (%)", 10, 40, 31) / 100
         
         # Semilla para reproducibilidad
         random_state = st.number_input("Random State", value=789)
@@ -117,10 +118,24 @@ def show_random_forest_manual():
     st.dataframe(distribucion.rename_axis("Clase").reset_index(name="Cantidad"))
 
     fig, ax = plt.subplots(figsize=(8, 4))
-    sns.barplot(x=distribucion.index, y=distribucion.values, palette="viridis", ax=ax)
-    ax.set_title("Distribución de Clases - Nivel de Demanda")
-    ax.set_xlabel("Nivel de Demanda (0=baja, 1=media, 2=alta)")
-    ax.set_ylabel("Cantidad de Productos")
+
+    sns.barplot(
+        x=distribucion.index, 
+        y=distribucion.values, 
+        palette=list(PALETA.values()),  
+        ax=ax
+    )
+    
+    # Estética del gráfico
+    ax.set_title(
+        "Distribución de Clases - Nivel de Demanda",
+        fontsize=16, fontweight="bold", color=PALETA["secundario"],
+        pad=15
+    )
+    ax.set_xlabel("Nivel de Demanda (0=baja, 1=media, 2=alta)", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Cantidad de Productos", fontsize=12, fontweight="bold")
+    ax.grid(alpha=0.2)
+    
     mostrar_fig(fig)
 
     # Advertencia por dataset pequeño
@@ -148,18 +163,21 @@ def show_random_forest_manual():
             # División del dataset respetando la proporción original de clases
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, 
-                test_size=test_size, 
-                random_state=random_state,
-                stratify=y  # mantiene proporciones de la variable objetivo
+                test_size=0.31,     # Mismo que PyCaret
+                random_state=789,   # Mismo que PyCaret
+                stratify=y
             )
-
-            # Creación del modelo Random Forest
+            
+            # Configuración del modelo con hiperparámetros seleccionados           
             model = RandomForestClassifier(
-                n_estimators=n_estimators,
-                max_depth=max_depth,
-                random_state=random_state,
-                n_jobs=-1,
-                class_weight='balanced' if balancear else None
+                n_estimators=n_estimators,  # Más árboles, 200
+                max_depth=max_depth,        # Más profundidad, 15 
+                min_samples_split=5,        # Evita overfitting
+                min_samples_leaf=2,
+                max_features='sqrt',        # Mejor generalización
+                class_weight='balanced',
+                random_state=789,
+                n_jobs=-1
             )
             
             # Entrenamiento del modelo
@@ -276,7 +294,7 @@ def show_random_forest_manual():
         cm = confusion_matrix(y_test, y_pred)
         labels = model.classes_
 
-        fig, ax = plt.subplots(figsize=(6, 5))
+        fig, ax = plt.subplots(figsize=(5, 5))
         
         # Heatmap con anotaciones
         sns.heatmap(
@@ -288,14 +306,18 @@ def show_random_forest_manual():
             xticklabels=labels,
             yticklabels=labels,
             cbar=True,
+            square=True,  
+            linewidths=0.5,  
+            linecolor='white', 
+            cbar_kws={'shrink': 0.6}, 
             ax=ax
-        )
+        )       
         
         # Estilo del gráfico
         ax.set_title("Matriz de Confusión", fontsize=14, fontweight="bold", color=PALETA["secundario"])
         ax.set_xlabel("Predicción", fontsize=12, fontweight="bold")
         ax.set_ylabel("Real", fontsize=12, fontweight="bold")
-        mostrar_fig(fig)
+        mostrar_fig(fig, ancho=500)
 
         # ===============================================================
         # 🔸 IMPORTANCIAS
@@ -332,8 +354,174 @@ def show_random_forest_manual():
         ax.set_ylabel("Variables", fontsize=12,fontweight="bold")
         mostrar_fig(fig)
 
+
         # ===============================================================
-        # 1️⃣1️⃣ DESCARGAR MODELO
+        # 1️⃣1️⃣ Classification Report (Métricas por clase)
+        # ===============================================================
+        st.markdown("### 12. Métricas por Clase (Classification Report)")
+
+        st.info("""
+        **Interpretación del Classification Report:**
+
+        - **Precision**: De los productos que predije como X demanda, ¿cuántos realmente eran de esa demanda?
+        - **Recall**: De todos los productos que realmente son de X demanda, ¿cuántos logré identificar?
+        - **F1-Score**: Balance entre Precision y Recall (media armónica)
+
+        **🔸 Objetivo ideal**: Valores altos y balanceados en las 3 métricas para todas las clases.
+        """)
+
+        # Obtener reporte en dict
+        report = classification_report(
+            y_test, y_pred, 
+            output_dict=True, 
+            zero_division=0
+        )
+
+        # Convertir a DataFrame solo para clases
+        report_df = pd.DataFrame(report).transpose()
+        report_df = report_df.loc[[str(c) for c in model.classes_], ["precision", "recall", "f1-score"]]
+
+        # Mostrar tabla
+        st.dataframe(
+            report_df.style.format("{:.3f}")
+        )
+
+        # Análisis automático de fortalezas y debilidades
+        st.markdown("#### Análisis por Clase:")
+        
+        for clase in model.classes_:
+            clase_str = str(clase)
+            precision = report_df.loc[clase_str, "precision"]
+            recall = report_df.loc[clase_str, "recall"]
+            f1 = report_df.loc[clase_str, "f1-score"]
+            
+            if clase == 0:
+                nombre_clase = "Baja Demanda"
+            elif clase == 1:
+                nombre_clase = "Media Demanda" 
+            else:
+                nombre_clase = "Alta Demanda"
+            
+            # Evaluación automática
+            if f1 >= 0.7:
+                emoji = "✅"
+                estado = "BUENO"
+            elif f1 >= 0.5:
+                emoji = "⚠️" 
+                estado = "REGULAR"
+            else:
+                emoji = "❌"
+                estado = "A MEJORAR"
+            
+            st.write(f"{emoji} **{nombre_clase}**: F1-Score = {f1:.3f} ({estado})")
+            
+
+        # Heatmap
+        fig, ax = plt.subplots(figsize=(5, 5))  
+        sns.heatmap(
+            report_df,
+            annot=True,
+            fmt=".3f",
+            cmap=sns.diverging_palette(25, 220, s=70, l=40, as_cmap=True), 
+            center=0,
+            xticklabels=["Precision", "Recall", "F1-Score"],
+            yticklabels=labels,
+            cbar=True,
+            square=True,  
+            linewidths=0.5,  
+            linecolor='white', 
+            cbar_kws={'shrink': 0.6},  
+            ax=ax
+        )
+        
+        ax.set_title(
+            "Classification Report - Métricas por Clase",
+            fontsize=14,
+            fontweight="bold",
+            color=PALETA["secundario"]
+        )
+
+        ax.set_xlabel("Métrica", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Clase", fontsize=12, fontweight="bold")
+
+        # Ajustar tamaño de las etiquetas de los ejes
+        ax.tick_params(axis='both', labelsize=9)
+        
+        plt.tight_layout()  # Ajustar márgenes automáticamente
+        
+        mostrar_fig(fig, ancho=500)
+
+        # ===============================================================
+        # 1️⃣2️⃣ Curva de Aprendizaje (Learning Curve)
+        # ===============================================================
+        st.markdown("### 13. Curva de Aprendizaje (Learning Curve)")
+        
+        st.info("""
+        **Interpretación de la Curva de Aprendizaje:**
+
+        - **Línea AZUL (Entrenamiento)**: Performance del modelo en los datos de entrenamiento
+        - **Línea VERDE (Validación)**: Performance en datos no vistos (generalización)
+
+        **🔸 Patrones a observar:**
+        - **Curvas convergentes**: Modelo generaliza bien
+        - **Brecha grande**: Posible overfitting (modelo muy complejo)  
+        - **Ambas bajas**: Underfitting (modelo muy simple)
+        - **Todas suben**: Más datos podrían ayudar
+        """)
+
+        train_sizes, train_scores, test_scores = learning_curve(
+            model, X, y,
+            cv=cv_folds,
+            train_sizes=np.linspace(0.2, 1.0, 5),
+            scoring="accuracy",
+            n_jobs=-1
+        )
+
+        train_mean = train_scores.mean(axis=1)
+        test_mean = test_scores.mean(axis=1)
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(train_sizes, train_mean, marker="o", label="Entrenamiento")
+        ax.plot(train_sizes, test_mean, marker="o", label="Validación")
+
+        ax.set_title(
+            "Learning Curve - Accuracy",
+            fontsize=14,
+            fontweight="bold",
+            color=PALETA["secundario"]
+        )
+
+        ax.set_xlabel("Cantidad de muestras de entrenamiento", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Accuracy", fontsize=12, fontweight="bold")
+        ax.grid(alpha=0.2)
+        ax.legend()
+
+
+        # Análisis automático de la curva
+        brecha_final = train_mean[-1] - test_mean[-1]
+        accuracy_final = test_mean[-1]
+
+        st.markdown("#### 🔍 Diagnóstico de la Curva:")
+
+        if brecha_final < 0.1:
+            st.write(f"✅ **BUENA GENERALIZACIÓN**: Brecha pequeña ({brecha_final:.3f}) entre entrenamiento y validación")
+        elif brecha_final < 0.2:
+            st.write(f"⚠️ **GENERALIZACIÓN MODERADA**: Brecha moderada ({brecha_final:.3f}) - considerar regularización")
+        else:
+            st.write(f"❌ **POSIBLE OVERFITTING**: Brecha grande ({brecha_final:.3f}) - modelo muy complejo para los datos")
+
+        if accuracy_final > 0.7:
+            st.write(f"🎯 **ALTA PRECISIÓN**: Accuracy final de {accuracy_final:.3f}")
+        elif accuracy_final > 0.6:
+            st.write(f"📊 **PRECISIÓN ACEPTABLE**: Accuracy final de {accuracy_final:.3f}")
+        else:
+            st.write(f"🔧 **PRECISIÓN A MEJORAR**: Accuracy final de {accuracy_final:.3f}")
+            
+        mostrar_fig(fig)
+
+
+        # ===============================================================
+        # 1️⃣3️⃣ DESCARGAR MODELO
         # ===============================================================
         st.markdown("### 11. Descargar Modelo Entrenado")
 
@@ -358,86 +546,4 @@ def show_random_forest_manual():
         with open(ruta_modelo, "wb") as f:
             pickle.dump(model, f)
 
-        st.info(f"📁 Modelo guardado automáticamente en: `{ruta_modelo}`")
-
-
-    # ===============================================================
-    # 1️⃣2️⃣ Classification Report (Métricas por clase)
-    # ===============================================================
-    st.markdown("### 12. Métricas por Clase (Classification Report)")
-
-    # Obtener reporte en dict
-    report = classification_report(
-        y_test, y_pred, 
-        output_dict=True, 
-        zero_division=0
-    )
-
-    # Convertir a DataFrame solo para clases
-    report_df = pd.DataFrame(report).transpose()
-    report_df = report_df.loc[[str(c) for c in model.classes_], ["precision", "recall", "f1-score"]]
-
-    # Mostrar tabla
-    st.dataframe(
-        report_df.style.format("{:.3f}")
-    )
-
-    # Heatmap
-    fig, ax = plt.subplots(figsize=(7, 4))
-    sns.heatmap(
-        report_df,
-        annot=True,
-        fmt=".3f",
-        cmap="Blues",
-        cbar=True,
-        ax=ax
-    )
-
-    ax.set_title(
-        "Classification Report - Métricas por Clase",
-        fontsize=14,
-        fontweight="bold",
-        color=PALETA["secundario"]
-    )
-
-    ax.set_xlabel("Métrica")
-    ax.set_ylabel("Clase")
-
-    mostrar_fig(fig)
-
-    # ===============================================================
-    # 1️⃣4️⃣ Curva de Aprendizaje (Learning Curve)
-    # ===============================================================
-    st.markdown("### 14. Curva de Aprendizaje (Learning Curve)")
-
-    from sklearn.model_selection import learning_curve
-    import numpy as np
-
-    train_sizes, train_scores, test_scores = learning_curve(
-        model, X, y,
-        cv=cv_folds,
-        train_sizes=np.linspace(0.2, 1.0, 5),
-        scoring="accuracy",
-        n_jobs=-1
-    )
-
-    train_mean = train_scores.mean(axis=1)
-    test_mean = test_scores.mean(axis=1)
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(train_sizes, train_mean, marker="o", label="Entrenamiento")
-    ax.plot(train_sizes, test_mean, marker="o", label="Validación")
-
-    ax.set_title(
-        "Learning Curve - Accuracy",
-        fontsize=15,
-        fontweight="bold",
-        color=PALETA["secundario"]
-    )
-
-    ax.set_xlabel("Cantidad de muestras de entrenamiento")
-    ax.set_ylabel("Accuracy")
-    ax.grid(alpha=0.2)
-    ax.legend()
-
-    mostrar_fig(fig)
+        st.info(f"📁 Modelo guardado automáticamente en: `{ruta_modelo}`")    
